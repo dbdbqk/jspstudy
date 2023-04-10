@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+ <!-- namespace는 mybatis.mapper.bbs.xml 파일을 의미한다 이때 .은 패키지로 인식 하기 때문에 .xml은 제외 --> 
+<mapper namespace="mybatis.mapper.bbs">
+
+	<!-- 목록 -->		
+	<select id="selectAllBbsList" resultType="Bbs"> <!-- resultType 반환타입 -->
+		SELECT BBS_NO, TITLE, CONTENT, MODIFIED_DATE, CREATED_DATE
+		  FROM BBS
+		ORDER BY BBS_NO DESC
+	</select>
+	
+	<!-- 상세 -->
+	<select id="selectBbsByNo" parameterType="int" resultType="Bbs"> <!-- parameterType 매개변수 타입 -->
+		SELECT BBS_NO, TITLE, CONTENT, MODIFIED_DATE, CREATED_DATE
+		  FROM BBS
+		 WHERE BBS_NO = #{bbsNo}			<!-- #{bbsNo} bbsNo 매개변수 값이 넘어와서 들어간다 -->
+	</select>
+
+	<!-- 삽입 -->
+	<insert id="insertBbs" parameterType="Bbs">	<!-- 인설트,업데이트,딜리트는 리절트타입 안적어도 괜찮음 알아서 해줌 -->
+		INSERT INTO BBS
+			(BBS_NO, TITLE, CONTENT, CREATED_DATE)
+		VALUES
+			(BBS_SEQ.NEXTVAL, #{title}, #{content}, TO_CHAR(SYSDATE, 'YY.MM.DD HH:MI:SS'))
+	</insert>
+		
+	<!-- 수정 -->
+	<update id="updateBbs" parameterType="Bbs">
+		UPDATE BBS
+		   SET TITLE = #{title}
+		     , CONTENT = #{content}
+		     , MODIFIED_DATE = TO_CHAR(SYSDATE, 'YY.MM.DD HH:MI:SS')
+		 WHERE BBS_NO = #{bbsNo}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteBbs" parameterType="int">
+		DELETE 
+		  FROM BBS
+		 WHERE BBS_NO = #{bbsNo}
+	</delete>
+
+</mapper>
